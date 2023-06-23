@@ -41,6 +41,7 @@
 #include "canvas/Arduino_Canvas_3bit.h"
 #include "canvas/Arduino_Canvas_Mono.h"
 #include "display/Arduino_ILI9488_3bit.h"
+#include "vtemu/Arduino_Vtemu_Indexed.h"
 #endif // !defined(LITTLE_FOOT_PRINT)
 
 #include "display/Arduino_GC9106.h"
