@@ -134,6 +134,13 @@ void loop(void)
   int32_t usecRoundRects = testRoundRects();
   serialOut(F("Rounded rects (outline)\t"), usecRoundRects, 100, true);
 
+  int32_t usecIndexedCanvas63 = testIndexedCanvas(63,128,50);
+  serialOut(F("Flushing canvas (63x128 pixel, 50 times)\t"), usecIndexedCanvas63, 100, true);
+
+  int32_t usecIndexedCanvas64 = testIndexedCanvas(64,128,50);
+  serialOut(F("Flushing canvas (64x128 pixel, 50 times)\t"), usecIndexedCanvas64, 100, true);
+
+
 #ifdef CANVAS
   uint32_t start = micros_start();
   gfx->flush();
@@ -189,6 +196,8 @@ void loop(void)
   printnice(F("Arcs        "), usecArcs);
   printnice(F("RoundRects F"), usecFilledRoundRects);
   printnice(F("RoundRects  "), usecRoundRects);
+  printnice(F("Fl Canvas63 "), usecIndexedCanvas63);
+  printnice(F("Fl Canvas64 "), usecIndexedCanvas64);
 
   if ((h > w) || (h > 240))
   {
@@ -658,6 +667,35 @@ int32_t testRoundRects()
 
   return micros() - start;
 }
+
+int32_t testIndexedCanvas(uint16_t x,uint16_t y,uint16_t n)
+{
+  uint32_t start;
+
+  Arduino_Canvas_Indexed * can = new Arduino_Canvas_Indexed(x  /* width */, y /* height */, gfx,1,1);
+
+  if (!can->begin()) {
+    Serial.println("Could not create canvas.");
+    return -1;
+  }
+  //Serial.printf("Canvas %dx%d created.\n",can->width(),can->height());
+
+  can->fillScreen(GREEN);
+  can->setCursor(10,10);
+  can->printf("Hello");
+
+  start = micros_start();
+
+  for (int i = 0; i < n; i++)
+  {
+    can->flush();
+  }
+  start = micros() - start;
+
+  delete can;
+  return start;
+}
+
 
 /***************************************************
   Original sketch text:
